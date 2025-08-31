@@ -8195,3 +8195,19 @@ def test_bar_leading_nan():
         for b in rest:
             assert np.isfinite(b.xy).all()
             assert np.isfinite(b.get_width())
+
+
+def test_bar_all_nan():
+    """Test that ax.bar works when all x positions are NaN."""
+    fig, ax = plt.subplots()
+    
+    # This should not raise an exception (regression test for issue #24149)
+    bars = ax.bar([np.nan], [np.nan])
+    assert len(bars) == 1
+    
+    # Test specific cases mentioned in the issue
+    bars2 = ax.bar([np.nan], [0])  # This was raising
+    assert len(bars2) == 1
+    
+    bars3 = ax.bar([0], [np.nan])  # This was working
+    assert len(bars3) == 1
